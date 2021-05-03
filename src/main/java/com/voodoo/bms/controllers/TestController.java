@@ -1,5 +1,6 @@
 package com.voodoo.bms.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
+        final static Logger LOG = Logger.getLogger(AuthController.class);
 	@GetMapping("/all")
 	public String allAccess() {
 		return "Public Content.";

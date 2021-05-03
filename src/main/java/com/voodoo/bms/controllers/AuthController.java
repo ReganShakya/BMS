@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    
+        final static Logger LOG = Logger.getLogger(AuthController.class);
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -66,13 +69,14 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
+                LOG.info("User '" + userDetails.getUsername() + "' authenticated.");
 
 		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
-	}
+                                                        userDetails.getId(), 
+                                                        userDetails.getUsername(), 
+                                                        userDetails.getEmail(), 
+                                                        roles));
+}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -126,6 +130,7 @@ public class AuthController {
 		user.setRoles(roles);
 		userRepository.save(user);
 
+                LOG.info("User '" + user.getUsername() + "' registered successfully.");
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 }
